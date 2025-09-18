@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.UserMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.*,t.tenant_id,t.user_type,t.create_time as userTenantCreateTime
+        FROM sys_user_tenant t join sys_user a on a.user_id = t.user_id
+        <where>
+            <if test="param.userId != null">
+                AND a.user_id = #{param.userId}
+            </if>
+            <if test="param.username != null">
+                AND a.username LIKE CONCAT('%', #{param.username}, '%')
+            </if>
+            <if test="param.realname != null">
+                AND a.realname LIKE CONCAT('%', #{param.realname}, '%')
+            </if>
+            <if test="param.sex != null">
+                AND a.sex = #{param.sex}
+            </if>
+            <if test="param.phone != null">
+                AND a.phone LIKE CONCAT('%', #{param.phone}, '%')
+            </if>
+            <if test="param.email != null">
+                AND a.email LIKE CONCAT('%', #{param.email}, '%')
+            </if>
+            <if test="param.idCard != null">
+                AND a.id_card LIKE CONCAT('%', #{param.idCard}, '%')
+            </if>
+            <if test="param.birthday != null">
+                AND a.birthday LIKE CONCAT('%', #{param.birthday}, '%')
+            </if>
+
+            <if test="param.status != null">
+                AND a.`status` = #{param.status}
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.roleId != null">
+                AND a.user_id IN (SELECT user_id FROM sys_user_role WHERE role_id=#{param.roleId})
+            </if>
+            <if test="param.orgId != null">
+                AND a.user_id IN (SELECT user_id FROM sys_user_org WHERE org_id=#{param.orgId})
+            </if>
+            <if test="param.groupId != null">
+                AND a.user_id IN (SELECT user_id FROM sys_user_group WHERE group_id=#{param.groupId})
+            </if>
+            <if test="param.roleCode != null">
+                AND a.user_id IN (SELECT ur.user_id FROM sys_role r join sys_user_role ur on r.deleted=0 and r.role_id = ur.role_id and r.role_code=#{param.roleCode})
+            </if>
+            <if test="param.orgCode != null">
+                AND a.user_id IN (SELECT ur.user_id FROM sys_org r join sys_user_org ur on r.deleted=0 and r.org_id = ur.org_id and r.org_code=#{param.orgCode})
+            </if>
+            <if test="param.groupCode != null">
+                AND a.user_id IN (SELECT ur.user_id FROM sys_group r join sys_user_group ur on r.deleted=0 and r.group_id = ur.group_id and r.group_code=#{param.groupCode})
+            </if>
+             <!--租户内部数据权限 -->
+            <if test="param.orgIds != null and param.orgIds.size()>0">
+                AND a.user_id IN
+                ( SELECT user_id FROM sys_user_org WHERE org_id in
+                 <foreach collection="param.orgIds" open="(" close=")" separator="," item="orgId">
+                    #{orgId}
+                 </foreach>
+                )
+            </if>
+            <if test="param.keywords != null">
+                AND (
+                a.username LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.realname LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.id_card LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.phone LIKE CONCAT('%', #{param.keywords}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.system.entity.User">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.system.entity.User">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 根据账号查询 -->
+    <select id="selectByUsername" resultType="com.struggle.common.system.entity.User">
+        SELECT a.user_id,a.current_tenant_id,a.password,a.`status` FROM sys_user a
+        <where>
+            AND a.deleted = 0
+            AND a.username = #{username}
+        </where>
+    </select>
+
+</mapper>

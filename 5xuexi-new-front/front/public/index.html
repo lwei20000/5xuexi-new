@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+  <link rel="icon" href="<%= process.env.VUE_APP_API_BASE_URL %>/system/sysStaticPicture/favicon">
+  <link rel="stylesheet" href="<%= BASE_URL %>tinymce/skins/ui/oxide/content.min.css" lang="css">
+  <link rel="stylesheet" href="<%= BASE_URL %>tinymce/skins/content/default/content.min.css" lang="css">
+  <title><%= process.env.VUE_APP_NAME %></title>
+  <style>
+    .ele-admin-loading {
+      width: 36px;
+      font-size: 0;
+      display: inline-block;
+      transform: rotate(45deg);
+      animation: loadingRotate 1.2s infinite linear;
+      position: relative;
+      top: calc(50% - 18px);
+      left: calc(50% - 18px);
+    }
+
+    .ele-admin-loading span {
+      width: 10px;
+      height: 10px;
+      margin: 4px;
+      border-radius: 50%;
+      background: #1890ff;
+      display: inline-block;
+      opacity: .9;
+    }
+
+    .ele-admin-loading span:nth-child(2) {
+      opacity: .7;
+    }
+
+    .ele-admin-loading span:nth-child(3) {
+      opacity: .5;
+    }
+
+    .ele-admin-loading span:nth-child(4) {
+      opacity: .3;
+    }
+
+    @keyframes loadingRotate {
+      to {
+        transform: rotate(405deg);
+      }
+    }
+
+    #app > .ele-admin-loading {
+      position: fixed;
+    }
+  </style>
+
+</head>
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+      Please enable it to continue.</strong>
+  </noscript>
+  <div id="app">
+    <div class="ele-admin-loading">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <!-- built files will be auto injected -->
+</body>
+</html>

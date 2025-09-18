@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.TenantTableMapper">
+
+    <!-- 查询List -->
+    <select id="_selectList" resultType="com.struggle.common.system.entity.TenantTable">
+        SELECT a.* FROM sys_tenant_table a
+    </select>
+
+    <!-- 执行创建sql -->
+    <insert id="execute">
+        ${_sql}
+    </insert>
+</mapper>

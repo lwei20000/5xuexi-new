@@ -1,0 +1,10 @@
+/public/**
+/src/assets/**
+/node_modules/**
+/dist/**
+
+.local
+.output.js
+
+**/*.svg
+**/*.sh

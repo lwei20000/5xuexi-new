@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.UserOrgMapper">
+
+    <insert id="insertBatch">
+        INSERT INTO sys_user_org(user_id, org_id) VALUES
+        <foreach collection="orgIds" item="orgId" separator=",">
+            (#{userId}, #{orgId})
+        </foreach>
+    </insert>
+
+    <select id="selectByUserId" resultType="com.struggle.common.system.entity.Org">
+        SELECT a.user_id, b.org_id,b.parent_id,b.org_code,b.org_name,b.org_full_name
+        FROM sys_user_org a
+                 LEFT JOIN sys_org b ON a.org_id = b.org_id
+        WHERE a.user_id = #{userId} AND b.deleted = 0
+    </select>
+
+    <select id="selectByUserIds" resultType="com.struggle.common.system.entity.Org">
+        SELECT a.user_id, b.org_id,b.parent_id,b.org_code,b.org_full_name,b.org_name
+        FROM sys_user_org a
+        LEFT JOIN sys_org b ON a.org_id = b.org_id
+        WHERE a.user_id IN
+        <foreach collection="userIds" open="(" close=")" separator="," item="userId">
+            #{userId}
+        </foreach>
+        AND b.deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.system.mapper.UserFileMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.* FROM sys_user_file a
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.name != null">
+                AND a.`name` LIKE CONCAT('%', #{param.name}, '%')
+            </if>
+            <if test="param.contentType != null">
+                AND a.content_type LIKE CONCAT('%', #{param.contentType}, '%')
+            </if>
+            <if test="param.userId != null">
+                AND a.user_id = #{param.userId}
+            </if>
+            <if test="param.isDirectory != null">
+                AND a.is_directory = #{param.isDirectory}
+            </if>
+            <if test="param.parentId != null">
+                AND a.parent_id = #{param.parentId}
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.keywords != null">
+                AND (
+                a.`name` LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.content_type LIKE CONCAT('%', #{param.keywords}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.system.entity.UserFile">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.system.entity.UserFile">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

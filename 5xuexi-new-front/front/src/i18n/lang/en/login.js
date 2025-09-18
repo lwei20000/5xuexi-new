@@ -1,0 +1,14 @@
+/* 登录页面 */
+export default {
+  title: 'User Login',
+  username: 'please input username',
+  password: 'please input password',
+  code: 'please input code',
+  remember: 'remember',
+  forget: 'forget',
+  login: 'login',
+  loading: 'loading',
+  tenant:'please select school',
+  login1:'Account Login',
+  login2:'Student ID Login'
+};

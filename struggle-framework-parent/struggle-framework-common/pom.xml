@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.struggle</groupId>
+        <artifactId>struggle-framework-parent</artifactId>
+        <version>1.4.8-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.struggle</groupId>
+    <artifactId>struggle-framework-common</artifactId>
+    <version>1.4.8-SNAPSHOT</version>
+
+    <name>struggle-framework-common</name>
+    <description>Struggle project for Spring Boot</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.struggle</groupId>
+            <artifactId>struggle-framework-service</artifactId>
+            <version>1.4.8-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <!-- 启动配置 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+<!--                    <proguardVersion>6.2.2</proguardVersion>-->
+                    <injar>${project.build.finalName}.jar</injar>
+                    <outjar>${project.build.finalName}.jar</outjar>
+                    <obfuscate>true</obfuscate>
+                    <addMavenDescriptor>true</addMavenDescriptor>
+                    <proguardInclude>${project.basedir}/proguard.cfg</proguardInclude>
+                </configuration>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>net.sf.proguard</groupId>-->
+<!--                        <artifactId>proguard-base</artifactId>-->
+<!--                        <version>6.2.2</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*Mapper.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>

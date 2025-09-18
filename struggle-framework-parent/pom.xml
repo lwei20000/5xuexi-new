@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.struggle</groupId>
+    <artifactId>struggle-framework-parent</artifactId>
+    <version>1.4.8-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>struggle-framework-backend</module>
+        <module>struggle-framework-common</module>
+        <module>struggle-framework-pay</module>
+        <module>struggle-framework-client</module>
+        <module>struggle-framework-oss-qiniu</module>
+        <module>struggle-framework-oss-tianyiyun</module>
+        <module>struggle-framework-service</module>
+    </modules>
+
+    <name>struggle-framework-parent</name>
+    <description>Struggle project for Spring Boot</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.17</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <!--2023-10-26 更新jar包 -->
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-datasource.version>4.2.0</mybatis-datasource.version>
+        <mysql.version>8.0.33</mysql.version>
+        <redisson.version>3.24.3</redisson.version>
+        <hutool.version>5.8.22</hutool.version>
+        <poi.version>5.2.4</poi.version>
+        <swagger.version>1.7.0</swagger.version>
+        <jjwt.version>0.12.3</jjwt.version>
+        <captcha.version>1.6.2</captcha.version>
+        <fastdfs-client.version>1.27.2</fastdfs-client.version>
+    </properties>
+</project>

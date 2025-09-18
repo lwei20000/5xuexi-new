@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.system.mapper.OrgMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.* FROM sys_org a
+        <where>
+            AND a.deleted = 0
+            <if test="param.orgId != null">
+                AND a.org_id = #{param.orgId}
+            </if>
+            <if test="param.parentId != null">
+                AND a.parent_id = #{param.parentId}
+            </if>
+            <if test="param.orgCode != null">
+                AND a.org_code LIKE CONCAT('%', #{param.orgCode}, '%')
+            </if>
+            <if test="param.orgName != null">
+                AND a.org_name LIKE CONCAT('%', #{param.orgName}, '%')
+            </if>
+            <if test="param.orgFullName != null">
+                AND a.org_full_name LIKE CONCAT('%', #{param.orgFullName}, '%')
+            </if>
+            <if test="param.orgFullCode != null">
+                AND a.org_full_code LIKE CONCAT('%', #{param.orgFullCode}, '%')
+            </if>
+            <if test="param.orgType != null">
+                AND a.org_type = #{param.orgType}
+            </if>
+            <if test="param.comments != null">
+                AND a.comments LIKE CONCAT('%', #{param.comments}, '%')
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <!--租户内部数据权限 -->
+            <if test="param.orgIds != null and param.orgIds.size()>0">
+                AND a.org_id in
+                <foreach collection="param.orgIds" open="(" close=")" separator="," item="orgId">
+                    #{orgId}
+                </foreach>
+            </if>
+            <!--租户数据权限 -->
+            <if test="tenantIds != null and tenantIds.size()>0">
+                AND a.tenant_id in
+                <foreach collection="tenantIds" open="(" close=")" separator="," item="tenantId">
+                    #{tenantId}
+                </foreach>
+            </if>
+            <if test="tenantId != null">
+                AND a.tenant_id  = #{tenantId}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.system.entity.Org">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.system.entity.Org">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

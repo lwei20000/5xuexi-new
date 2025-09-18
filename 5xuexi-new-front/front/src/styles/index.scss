@@ -1,0 +1,114 @@
+/** 全局样式 */
+//主体内容的宽度
+$--body-limit-width: 90%;
+$--ele-font-path: '~ele-admin/es/style/fonts';
+@import '~ele-admin/es/style/themes/dynamic.scss';
+@import '~ele-admin/es/style/index.scss';
+@import './transition/index.scss';
+
+/** 去掉padding和 max-width 改为100%*/
+@media screen and (max-width: 768px ) {
+  .ele-body{
+    max-width: 100%!important;
+    padding: 0px!important;
+  }
+  .ele-admin-header .ele-admin-logo > img + span{
+    display: none!important;
+  }
+  .el-backtop{
+    bottom:80px!important;
+  }
+  .ele-admin-responsive.ele-admin-collapse .ele-admin-sidebar,.ele-admin-responsive.ele-admin-collapse .ele-admin-logo{
+    display: none;
+  }
+  .ele-admin-responsive:not(.ele-admin-collapse) .ele-admin-sidebar, .ele-admin-responsive:not(.ele-admin-collapse) .ele-admin-logo{
+    display: flex;
+  }
+  .ele-split-panel.is-responsive:not(.is-vertical) > .ele-split-panel-wrap{
+    position: relative;
+  }
+  .ele-split-panel > .ele-split-panel-body{
+    position:absolute;
+    background: #fff;
+    left: 0;
+    right: 0;
+  }
+  .ele-admin-header .ele-admin-logo > img{
+    -webkit-transform: scale(0.7);
+    -moz-transform: scale(0.7);
+    -o-transform: scale(0.7);
+    transform: scale(0.7);
+  }
+  .ele-split-panel>.ele-split-collapse-button{
+    position: fixed;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .ele-admin-responsive .ele-admin-header .ele-admin-header-tool .ele-admin-header-tool-item {
+    padding: 0 8px !important;
+  }
+}
+
+/** 覆盖菜单样式 开始 */
+.ele-admin-header >.ele-admin-header-nav{
+  text-align: right;
+}
+/** 覆盖菜单样式 结束 */
+
+
+/** 覆盖表单禁用后字体颜色 开始 */
+.el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
+  color:var(--color-text-regular)!important;
+}
+/** 覆盖表单禁用后字体颜色 结束 */
+
+
+
+/** 覆盖logo样式 开始 */
+.ele-admin-header .ele-admin-logo > img{
+  width: auto;
+  height: 45px;
+}
+.ele-admin-header .ele-admin-logo > img + span {
+  margin-left: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+/** 覆盖logo样式 结束 */
+
+/** 覆盖logo样式 结束 */
+.noBorderInput .el-input__inner,.noBorderInput .el-textarea__inner{
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-radius: unset;
+}
+
+/** 富文本样式  */
+.wdms_html * {
+  word-break: break-all;
+}
+.wdms_html table[style*="border-width: 0px"],
+.wdms_html table:not([border]),
+.wdms_html table[border="0"],
+.wdms_html table[style*="border-width: 0px"] td,
+.wdms_html table:not([border]) td,
+.wdms_html table[border="0"] td,
+.wdms_html table[style*="border-width: 0px"] th,
+.wdms_html table:not([border]) th,
+.wdms_html table[border="0"] th,
+.wdms_html table[style*="border-width: 0px"] caption,
+.wdms_html table:not([border]) caption,
+.wdms_html table[border="0"] caption {
+  border: 1px dashed #bbb;
+}
+.wdms_html ul,.wdms_html ol{
+  padding-inline-start: 40px;
+}
+.wdms_html img,
+.wdms_html video {
+  max-width: 100%;
+  height: auto;
+}
+

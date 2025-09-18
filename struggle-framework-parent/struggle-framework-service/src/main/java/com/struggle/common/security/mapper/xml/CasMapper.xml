@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.security.mapper.CasMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.*
+        FROM sys_cas a
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.name != null">
+                AND a.name LIKE CONCAT('%', #{param.name}, '%')
+            </if>
+            <if test="param.casType != null">
+                AND a.cas_type LIKE CONCAT('%', #{param.casType}, '%')
+            </if>
+            <if test="param.appKey != null">
+                AND a.app_key LIKE CONCAT('%', #{param.appKey}, '%')
+            </if>
+            <if test="param.appSecret != null">
+                AND a.app_secret LIKE CONCAT('%', #{param.appSecret}, '%')
+            </if>
+            <if test="param.serviceId != null">
+                AND a.service_id LIKE CONCAT('%', #{param.serviceId}, '%')
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.security.entity.Cas">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.security.entity.Cas">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

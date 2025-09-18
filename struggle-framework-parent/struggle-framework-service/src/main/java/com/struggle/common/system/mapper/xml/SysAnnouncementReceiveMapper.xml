@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.system.mapper.SysAnnouncementReceiveMapper">
+    <!-- 用户分页查询 -->
+    <select id="pageRel" resultType="com.struggle.common.system.entity.SysAnnouncement">
+            select  m.*,if(rea.id,1,0) as has_read from (
+            SELECT distinct b.announcement_id,b.title,b.top_timestamp,b.create_time
+                          <if  test="param.detail">
+                              ,b.content_text,b.announcement_picture,b.announcement_type
+                          </if>
+            FROM sys_announcement_receive a join sys_announcement b on b.deleted=0 and a.announcement_id = b.announcement_id
+            <where>
+                a.deleted = 0
+                <if test="param.title != null">
+                    AND b.title LIKE CONCAT('%', #{param.title}, '%')
+                </if>
+                <if test="param.announcementType != null">
+                    AND b.announcement_type = #{param.announcementType}
+                </if>
+                and (
+                (a.receive_type='1' and (a.add_newly = 1 or( a.add_newly = 0 and a.create_time > #{param.userTenantCreateTime})))
+                or (a.receive_type='4' and a.receive_id = #{param.userId} )
+                or (a.receive_type ='2' and a.receive_id in(SELECT o.org_id from sys_user_org o WHERE o.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= o.create_time))))
+                or (a.receive_type ='3' and a.receive_id in(SELECT ro.role_id from sys_user_role ro WHERE ro.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= ro.create_time))))
+                or (a.receive_type ='5' and a.receive_id in(SELECT op.group_id from sys_user_group op WHERE op.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= op.create_time))))
+                )
+            </where>
+        ) m left join sys_announcement_read rea on rea.deleted=0 and rea.user_id = #{param.userId} and  m.announcement_id = rea.announcement_id
+       <if test="param.hasRead != null">
+           where if(rea.id,1,0) = #{param.hasRead}
+       </if>
+        order by m.top_timestamp desc,m.create_time desc
+    </select>
+
+    <!-- 用户查询详情 -->
+    <select id="get" resultType="com.struggle.common.system.entity.SysAnnouncement">
+        SELECT distinct b.*
+        FROM sys_announcement_receive a join sys_announcement b on b.deleted = 0 and a.announcement_id = b.announcement_id
+        <where>
+            a.deleted = 0
+            <if test="param.announcementId != null">
+                AND a.announcement_id = #{param.announcementId}
+            </if>
+            and (
+                (a.receive_type='1' and (a.add_newly = 1 or( a.add_newly = 0 and a.create_time > #{param.userTenantCreateTime})))
+                or (a.receive_type='4' and a.receive_id = #{param.userId} )
+                or (a.receive_type ='2' and a.receive_id in(SELECT o.org_id from sys_user_org o WHERE o.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= o.create_time))))
+                or (a.receive_type ='3' and a.receive_id in(SELECT ro.role_id from sys_user_role ro WHERE ro.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= ro.create_time))))
+                or (a.receive_type ='5' and a.receive_id in(SELECT op.group_id from sys_user_group op WHERE op.user_id = #{param.userId} and (a.add_newly =1 or (a.add_newly=0 and a.create_time >= op.create_time))))
+            )
+        </where>
+    </select>
+
+</mapper>

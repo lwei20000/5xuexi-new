@@ -1,0 +1,63 @@
+package com.struggle.common.system.entity;
+
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ *
+ * @ClassName: SysSystemMessageReceive
+ * @Description: 系统消息接收对象-实体对象
+ * @author xsk
+ */
+@Data
+@Schema(name = "SysSystemMessageReceive", description = "系统消息接收对象")
+@TableName("sys_system_message_receive")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class SysSystemMessageReceive implements Serializable{
+
+private static final long serialVersionUID = 1L;
+
+    @Schema(description = "主键ID")
+    @TableId(type = IdType.AUTO)
+    private Integer  id;
+
+    @Schema(description = "系统消息ID")
+    @NotNull(message = "系统消息ID不能为空")
+    private Integer  systemMessageId;
+
+    @Schema(description = "接收类型：1、全员  2、租户  3、默认角色  4、用户")
+    @Length(max = 10, message = "接收类型长度不能超过{max}")
+    @NotBlank(message = "接收类型不能为空")
+    private String  receiveType;
+
+    @Schema(description = "接收类型ID，全员为空")
+    private Integer  receiveId;
+
+    @Schema(description = "新加入的可见, 0否, 1是")
+    @Range(min = 0, max = 1, message = "新加入的可见, 0否, 1是取值范围为0-1")
+    private Integer  addNewly;
+
+    @Schema(description = "是否删除, 0否, 1是")
+    @Range(min = 0, max = 1, message = "是否删除, 0否, 1是取值范围为0-1")
+    @TableLogic
+    private Integer  deleted;
+
+    @Schema(description = "创建时间")
+    private  Date  createTime;
+
+    @Schema(description = "修改时间")
+    private  Date  updateTime;
+
+    @Schema(description = "接收类型名称")
+    @TableField(exist = false)
+    private String  receiveName;
+}

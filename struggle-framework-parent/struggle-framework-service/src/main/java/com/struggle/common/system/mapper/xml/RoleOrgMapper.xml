@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.RoleOrgMapper">
+
+    <insert id="insertBatch">
+        INSERT INTO sys_role_org(role_id, org_id) VALUES
+        <foreach collection="orgIds" item="orgId" separator=",">
+            (#{roleId}, #{orgId})
+        </foreach>
+    </insert>
+
+    <select id="selectByRoleId" resultType="com.struggle.common.system.entity.Org">
+        SELECT org_id
+        FROM sys_role_org
+        WHERE role_id = #{roleId}
+    </select>
+
+    <select id="selectByRoleIds" resultType="com.struggle.common.system.entity.Org">
+        SELECT a.role_id, b.*
+        FROM sys_role_org a
+        LEFT JOIN sys_org b ON a.org_id = b.org_id
+        WHERE a.role_id IN
+        <foreach collection="roleIds" open="(" close=")" separator="," item="roleId">
+            #{roleId}
+        </foreach>
+        AND b.deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.OrgLeaderMapper">
+
+    <insert id="insertBatch">
+        INSERT INTO sys_org_leader(user_id, org_id) VALUES
+        <foreach collection="userIds" item="userId" separator=",">
+            (#{userId}, #{orgId})
+        </foreach>
+    </insert>
+
+    <select id="selectByUserId" resultType="com.struggle.common.system.entity.Org">
+        SELECT org_id
+        FROM sys_org_leader
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectByOrgIds" resultType="com.struggle.common.system.entity.User">
+        SELECT a.org_id, b.user_id,b.username,b.realname
+        FROM sys_org_leader  a
+        LEFT JOIN sys_user b ON a.user_id = b.user_id
+        WHERE a.org_id IN
+        <foreach collection="orgIds" open="(" close=")" separator="," item="orgId">
+            #{orgId}
+        </foreach>
+        AND b.deleted = 0
+    </select>
+</mapper>

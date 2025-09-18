@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.struggle.common.system.mapper.RoleMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.* FROM sys_role a
+        <where>
+            AND a.deleted = 0
+            <if test="param.roleId != null">
+                AND a.role_id = #{param.roleId}
+            </if>
+            <if test="param.parentId != null">
+                AND a.parent_id = #{param.parentId}
+            </if>
+            <if test="param.roleCode != null">
+                AND a.role_code LIKE CONCAT('%', #{param.roleCode}, '%')
+            </if>
+            <if test="param.roleName != null">
+                AND a.role_name LIKE CONCAT('%', #{param.roleName}, '%')
+            </if>
+            <if test="param.scopeType != null">
+                AND a.scope_type = #{param.scopeType}
+            </if>
+            <if test="param.comments != null">
+                AND a.comments LIKE CONCAT('%', #{param.comments}, '%')
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <!--租户数据权限 -->
+            <if test="tenantIds != null and tenantIds.size()>0">
+                AND a.tenant_id in
+                <foreach collection="tenantIds" open="(" close=")" separator="," item="tenantId">
+                    #{tenantId}
+                </foreach>
+            </if>
+            <if test="tenantId != null">
+                AND a.tenant_id  = #{tenantId}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.system.entity.Role">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.system.entity.Role">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

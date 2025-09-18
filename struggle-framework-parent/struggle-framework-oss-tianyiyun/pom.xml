@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.struggle</groupId>
+        <artifactId>struggle-framework-parent</artifactId>
+        <version>1.4.8-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.struggle</groupId>
+    <artifactId>struggle-framework-oss-tianyiyun</artifactId>
+    <version>1.4.8-SNAPSHOT</version>
+
+    <name>struggle-framework-oss-tianyiyun</name>
+    <description>Struggle project for Spring Boot</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.struggle</groupId>
+            <artifactId>struggle-framework-service</artifactId>
+            <version>1.4.8-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 天翼云 -->
+        <dependency>
+            <groupId>com.tianyiyun</groupId>
+            <artifactId>oos-java-sdk</artifactId>
+            <version>6.5.4-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.15</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.11.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 天翼云结束 -->
+
+    </dependencies>
+
+    <!-- 启动配置 -->
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*Mapper.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>libs</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>

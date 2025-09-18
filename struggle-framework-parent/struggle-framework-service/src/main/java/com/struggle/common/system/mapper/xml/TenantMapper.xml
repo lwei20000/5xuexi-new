@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.system.mapper.TenantMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.tenant_id,a.parent_id,a.tenant_name,a.tenant_type,a.tenant_full_name,a.tenant_code,a.tenant_logo,a.update_time,a.create_time
+        FROM sys_tenant a
+        <where>
+            <if test="param.tenantId != null">
+                AND a.tenant_id = #{param.tenantId}
+            </if>
+            <if test="param.tenantName != null">
+                AND a.tenant_name LIKE CONCAT('%', #{param.tenantName}, '%')
+            </if>
+            <if test="param.tenantType != null">
+                AND a.tenant_type = #{param.tenantType}
+            </if>
+            <if test="param.comments != null">
+                AND a.comments LIKE CONCAT('%', #{param.comments}, '%')
+            </if>
+            <if test="param.tenantFullName != null">
+                AND a.tenant_full_name LIKE CONCAT('%', #{param.tenantFullName}, '%')
+            </if>
+            <if test="param.tenantCode != null">
+                AND a.tenant_code LIKE CONCAT('%', #{param.tenantCode}, '%')
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.system.entity.Tenant">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.system.entity.Tenant">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>
