@@ -12,6 +12,9 @@ The other end is the teacher side, where instructors access the system to perfor
 <img width="688" height="300" alt="image" src="https://github.com/user-attachments/assets/fd1a2213-c226-424d-94bd-3bec8f3f368d" />
 
 The technical framework used by this platform includes:
+
 -Frontend: Vue.js, HTML, CSS
+
 -Backend: Java, Spring MVC, Spring Boot
+
 -Database: MySQL, Redis
