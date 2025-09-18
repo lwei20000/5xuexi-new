@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.base.mapper.CourseMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.course_id,
+               if(b.course_code_alias is null,a.course_code,b.course_code_alias) as 'courseCode',
+               if(b.course_name_alias is null,a.course_name,b.course_name_alias) as 'courseName',
+               a.comments,a.deleted,a.tenant_id,a.course_picture,a.sort_number,a.create_time,a.update_time
+        FROM t_course a
+        LEFT JOIN t_course_alias b
+            ON  b.tenant_id = #{param.tenantIdAlias}
+            AND a.course_id = b.course_id
+            AND b.deleted = 0
+        <where>
+            <if test="param.courseId != null">
+                AND a.course_id = #{param.courseId}
+            </if>
+            <if test="param.courseIds != null and param.courseIds.size()>0">
+                AND a.course_id in
+                <foreach collection="param.courseIds" open="(" close=")" separator="," item="courseId">
+                    #{courseId}
+                </foreach>
+            </if>
+            <if test="param.courseCode != null">
+                AND a.course_code LIKE CONCAT('%', #{param.courseCode}, '%')
+            </if>
+            <if test="param.courseCodeList != null and param.courseCodeList.size()>0">
+                AND  a.course_code IN
+                <foreach collection="param.courseCodeList" open="(" close=")" separator="," item="courseCode">
+                    #{courseCode}
+                </foreach>
+            </if>
+
+            <if test="param.courseName != null">
+                AND a.course_name LIKE CONCAT('%', #{param.courseName}, '%')
+            </if>
+            <if test="param.coursePicture != null">
+                AND a.course_picture LIKE CONCAT('%', #{param.coursePicture}, '%')
+            </if>
+            <if test="param.sortNumber != null">
+                AND a.sort_number = #{param.sortNumber}
+            </if>
+            <if test="param.comments != null">
+                AND a.comments LIKE CONCAT('%', #{param.comments}, '%')
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.tenantId != null">
+                AND a.tenant_id = #{param.tenantId}
+            </if>
+            <!--租户数据权限 -->
+            <if test="param.tenantIds != null and param.tenantIds.size()>0">
+                AND a.tenant_id in
+                <foreach collection="param.tenantIds" open="(" close=")" separator="," item="tenantId">
+                    #{tenantId}
+                </foreach>
+            </if>
+
+            <if test="param.keywords != null">
+                AND (
+                a.course_code LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.course_name LIKE CONCAT('%', #{param.keywords}, '%')
+                OR b.course_code_alias LIKE CONCAT('%', #{param.keywords}, '%')
+                OR b.course_name_alias LIKE CONCAT('%', #{param.keywords}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.base.entity.Course">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.base.entity.Course">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

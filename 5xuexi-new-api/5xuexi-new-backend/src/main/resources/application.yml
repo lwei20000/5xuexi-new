@@ -1,0 +1,159 @@
+# 端口
+server:
+  port: 8081
+  compression:
+    enabled: true
+
+#是否开启swagger
+springdoc:
+  api-docs:
+    enabled: true
+
+# 日志配置
+logging:
+  level:
+    com.struggle: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+
+tenant:
+  ignore-table-name-map:
+    sys_default_role_menu: true
+    sys_default_menu: true
+    sys_default_role: true
+    sys_user: true
+    sys_tenant: true
+    sys_dictionary: true
+    sys_dictionary_data: true
+    sys_tenant_table: true
+    sys_doc: true
+    sys_cas: true
+    sys_user_problem: true
+    sys_static_picture: true
+    sys_system_announcement: true
+    sys_system_announcement_read: true
+    sys_system_announcement_receive: true
+    sys_system_message: true
+    sys_system_message_read: true
+    sys_system_message_receive: true
+    t_user_learning: true
+  table-name-map:
+    t_user_learning: true
+
+# 多环境配置
+spring:
+  redis:
+    host:  120.55.161.50
+    password: wdg@123
+    port: 6379
+  # 连接池配置
+  datasource:
+    dynamic:
+      #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      strict: false
+      #设置默认的数据源或者数据源组
+      primary: system
+      hikari:
+        #最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
+        max-pool-size: 5
+        #最小空闲连接，默认值 10，小于0或大于maximum-pool-size，都会重置为maximum-pool-size
+        min-idle: 2
+        #连接超时时间:毫秒，小于250毫秒，否则被重置为默认值30秒
+        connection-timeout: 60000
+        #空闲连接超时时间，默认值600000ms（10分钟），大于等于max-lifetime且max-lifetime>0，会被重置为0；
+        #不等于0且小于10秒，会被重置为10秒。
+        #只有空闲连接数大于最大连接数且空闲时间超过该值，才会被释放(自动释放过期链接)
+        idle-timeout: 600000
+        #连接最大存活时间.不等于0且小于30秒，会被重置为默认值30分钟.设置应该比mysql设置的interactive_timeout=650,wait_timeout=650(秒)超时时间短
+        max-lifetime: 640000
+        #连接测试查询,jdbc4环境下用 onnection-test-query为null 默认 isUseJdbc4Validation 来校验
+        #D:\jdk\jdk1.8.0\jre\lib\resources.jar\META-INF\services 是否有 java.sql.Driver
+        connection-test-query: SELECT 1
+      datasource:
+        system:
+          #5xuexi
+          #url: jdbc:mysql://120.55.161.50:3306/db_xuexi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+          #username: root
+          #password:  wdg@123
+
+          #jxuxue-继续学
+          url: jdbc:mysql://120.26.36.242:3306/system_xuexi?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+          username: root
+          password: wdg@123
+
+          driverClassName: com.mysql.cj.jdbc.Driver
+          # hikari连接池
+          type: com.zaxxer.hikari.HikariDataSource
+
+  # json时间格式设置
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  # 设置上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  # 邮件服务器配置
+  mail:
+    host: smtp.qq.com
+    username: 16852578@qq.com
+    password: vbxrsocgwxjsbhdf
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+
+# Mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath*:com/struggle/**/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# 框架配置
+config:
+  token-key: ULgNsWJ8rPjRtnjzX/Gv2RGS80Ksnm/ZaLpvIL+NrBg/5xuexi/backend=
+  app-type: app_backend
+  #默认上传方式，fastdfs、qiniu、tianyiyun
+  default-upload: qiniu
+  #前端地址
+  front-domain: http://127.0.0.1:8080
+  #后端地址
+  backend-domain: http://127.0.0.1:8083
+
+# fdfs上传配置
+fdfs:
+  so-timeout: 3000 #读取超时时间
+  connect-timeout: 1500 #连接超时时间
+  thumb-image: # 缩略图
+    width: 150
+    height: 150
+  web-server-url: http://img.jxuxue.com
+  tracker-list: #tracker服务配置地址列表
+    - 120.26.36.242:22122
+
+# 七牛上传配置
+upload:
+  accessKey: 8FEYOjXkSp0UrBV4Uh3lGlEdkCxUh0-xsLVr0bO9
+  secretKey: SG403smIY_rOgDfnBL9CbR0R7ZQQjwUoOpVKbA81
+  domainPrefix: http://
+  domain: testvod.5xuexi.com
+  bucket: 5xuexi-test
+  endpoint: z0
+
+#控制项目中定时任务是否开启
+scheduled:
+  learningTask: false

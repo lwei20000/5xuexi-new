@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.struggle</groupId>
+    <artifactId>5xuexi-new-service</artifactId>
+    <version>1.5.0</version>
+
+    <name>5xuexi-new-service</name>
+    <description>EleAdminApi project for Spring Boot</description>
+
+    <parent>
+        <groupId>com.struggle</groupId>
+        <artifactId>5xuexi-new-api</artifactId>
+        <version>1.5.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.struggle</groupId>
+            <artifactId>struggle-framework-service</artifactId>
+            <version>1.4.8-SNAPSHOT</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.poi</groupId>-->
+<!--            <artifactId>poi-ooxml-schemas</artifactId>-->
+<!--            <version>4.1.2</version> &lt;!&ndash; 使用最新的稳定版本 &ndash;&gt;-->
+<!--        </dependency>-->
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*Mapper.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+</project>

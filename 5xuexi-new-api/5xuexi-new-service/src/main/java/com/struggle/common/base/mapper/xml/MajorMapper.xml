@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.base.mapper.MajorMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.*
+        FROM t_major a
+        <where>
+            <if test="param.majorId != null">
+                AND a.major_id = #{param.majorId}
+            </if>
+            <if test="param.majorYear != null">
+                AND a.major_year = #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND (#{param.academicYear} >= a.major_year and (a.major_year +CEILING(a.major_length)-1)>=#{param.academicYear})
+            </if>
+            <if test="param.majorCode != null">
+                AND a.major_code LIKE CONCAT('%', #{param.majorCode}, '%')
+            </if>
+            <if test="param.majorName != null">
+                AND a.major_name LIKE CONCAT('%', #{param.majorName}, '%')
+            </if>
+            <if test="param.majorPicture != null">
+                AND a.major_picture LIKE CONCAT('%', #{param.majorPicture}, '%')
+            </if>
+            <if test="param.majorType != null">
+                AND a.major_type = #{param.majorType}
+            </if>
+            <if test="param.majorGradation != null">
+                AND a.major_gradation = #{param.majorGradation}
+            </if>
+            <if test="param.majorForms != null">
+                AND a.major_forms = #{param.majorForms}
+            </if>
+            <if test="param.majorLength != null">
+                AND a.major_length = #{param.majorLength}
+            </if>
+            <if test="param.sortNumber != null">
+                AND a.sort_number = #{param.sortNumber}
+            </if>
+            <if test="param.comments != null">
+                AND a.comments LIKE CONCAT('%', #{param.comments}, '%')
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.keywords != null">
+                AND (
+                a.major_year LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.major_code LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.major_name LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.major_type LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.major_gradation LIKE CONCAT('%', #{param.keywords}, '%')
+                OR a.major_forms LIKE CONCAT('%', #{param.keywords}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.base.entity.Major">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.base.entity.Major">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>

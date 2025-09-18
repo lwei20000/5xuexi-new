@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.exam.mapper.TPaperMapper">
+
+    <!-- 分页查询 -->
+    <select id="pageCourseRel" resultType="com.struggle.common.exam.entity.TPaper">
+        SELECT distinct a.course_id  FROM
+        t_major_course a left join t_major b on a.major_id = b.major_id and b.deleted=0
+        <where>
+            a.deleted = 0
+            <if test="param.majorYear != null">
+                AND b.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((a.semester = ((#{param.academicYear} - b.major_year)*2+1)  or a.semester = ((#{param.academicYear} - b.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND a.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND a.semester = #{param.semester}
+            </if>
+            <if test="param.courseId != null">
+                AND a.course_id = #{param.courseId}
+            </if>
+            <if test="param.majorId != null">
+                AND a.major_id = #{param.majorId}
+            </if>
+            <if test="param.defaultPaper != null and param.defaultPaper==1">
+                AND a.course_id in(select course_id from t_paper where deleted=0 and  paper_usage = 1)
+            </if>
+            <if test="param.defaultPaper != null and param.defaultPaper==0">
+                AND a.course_id not in(select course_id from t_paper where deleted=0 and paper_usage = 1)
+            </if>
+        </where>
+    </select>
+</mapper>

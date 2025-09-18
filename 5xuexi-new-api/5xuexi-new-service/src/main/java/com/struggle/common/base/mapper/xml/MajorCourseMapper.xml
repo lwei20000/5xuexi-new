@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.base.mapper.MajorCourseMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT
+            a.*,
+            b.major_year
+        FROM
+            t_major_course a join t_major b on a.major_id = b.major_id and b.deleted=0
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.majorYear != null">
+                AND b.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((a.semester = ((#{param.academicYear} - b.major_year)*2+1)  or a.semester = ((#{param.academicYear} - b.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND a.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND a.semester = #{param.semester}
+            </if>
+            <if test="param.majorId != null">
+                AND a.major_id = #{param.majorId}
+            </if>
+            <if test="param.courseId != null">
+                AND a.course_id = #{param.courseId}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.base.entity.MajorCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.base.entity.MajorCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+    <select id="selectLastSemester" resultType="java.util.Map">
+        SELECT major_id as majorId,max(tmc.semester) as lastSemester
+        from t_major_course tmc
+        WHERE tmc.deleted = 0 and tmc.major_id in
+        <foreach collection="majorIds" open="(" close=")" separator="," item="majorId">
+            #{majorId}
+        </foreach>
+        group by major_id
+    </select>
+</mapper>

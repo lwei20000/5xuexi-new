@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.exam.mapper.TUserMajorCourseExamMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT
+        a.id,
+        a.paper_id,
+        a.status ,
+        a.start_time,
+        a.end_time,
+        a.score,
+        a.update_time,
+        u.user_id,
+        u.org_id,
+        d.course_id,
+        b.major_id,
+        d.semester,
+        e.major_course_exam_id
+        FROM
+        t_user_major_course_exam a
+        left join t_major_course_exam e on a.major_course_exam_id = e.major_course_exam_id and e.deleted=0
+        left join t_major_course d on e.major_course_id = d.id and d.deleted=0
+        left join t_major b on  d.major_id = b.major_id and b.deleted=0
+        left join t_user_major u on u.user_id = a.user_id and b.major_id = u.major_id and u.deleted=0
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.ids != null and param.ids.size()>0">
+                AND a.id in
+                <foreach collection="param.ids" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="param.majorYear != null">
+                AND b.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((d.semester = ((#{param.academicYear} - b.major_year)*2+1)  or d.semester = ((#{param.academicYear} - b.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND d.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND d.semester = #{param.semester}
+            </if>
+            <if test="param.majorId != null">
+                AND b.major_id = #{param.majorId}
+            </if>
+            <if test="param.courseId != null">
+                AND d.course_id = #{param.courseId}
+            </if>
+            <if test="param.status != null">
+                AND a.status = #{param.status}
+            </if>
+            <if test="param.userId != null">
+                AND a.user_id = #{param.userId}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.orgId != null">
+                AND u.org_id = #{param.orgId}
+            </if>
+            <!--租户内部数据权限 -->
+            <if test="param.orgIds != null and param.orgIds.size()>0">
+                AND u.org_id in
+                <foreach collection="param.orgIds" open="(" close=")" separator="," item="orgId">
+                    #{orgId}
+                </foreach>
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="selectSql1">
+        SELECT
+        3 as 'status',
+        e.update_time,
+        u.user_id,
+        u.org_id,
+        d.course_id,
+        b.major_id,
+        d.semester,
+        e.major_course_exam_id
+        FROM
+        t_major_course_exam e
+        left join t_major_course d on e.major_course_id = d.id and d.deleted=0
+        left join t_major b on  d.major_id = b.major_id and b.deleted=0
+        left join t_user_major u on b.major_id = u.major_id and u.deleted=0
+        <where>
+            and now() > e.start_time
+            and e.end_time > now()
+            and (select count(1) from t_user_major_course_exam a where a.major_course_exam_id = e.major_course_exam_id and a.user_id =u.user_id  and a.deleted=0) = 0
+            and (select count(1) from t_user_course c where c.user_id =u.user_id and d.major_id = c.major_id and d.course_id = c.course_id and c.deleted=0 and (c.total_score is null or 60 > c.total_score)) =1
+            <if test="param.majorYear != null">
+                AND b.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((d.semester = ((#{param.academicYear} - b.major_year)*2+1)  or d.semester = ((#{param.academicYear} - b.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND d.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND d.semester = #{param.semester}
+            </if>
+            <if test="param.majorId != null">
+                AND b.major_id = #{param.majorId}
+            </if>
+            <if test="param.courseId != null">
+                AND d.course_id = #{param.courseId}
+            </if>
+            <if test="param.userId != null">
+                AND u.user_id = #{param.userId}
+            </if>
+            <if test="param.deleted != null">
+                AND e.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND e.deleted = 0
+            </if>
+            <if test="param.orgId != null">
+                AND u.org_id = #{param.orgId}
+            </if>
+            <!--租户内部数据权限 -->
+            <if test="param.orgIds != null and param.orgIds.size()>0">
+                AND u.org_id in
+                <foreach collection="param.orgIds" open="(" close=")" separator="," item="orgId">
+                    #{orgId}
+                </foreach>
+            </if>
+            <if test="param.createTimeStart != null">
+                AND e.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND e.create_time &lt;= #{param.createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.exam.entity.TUserMajorCourseExam">
+        <include refid="selectSql"></include>
+    </select>
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.exam.entity.TUserMajorCourseExam">
+        <include refid="selectSql"></include>
+    </select>
+
+    <select id="selectPageRelNotExam" resultType="com.struggle.common.exam.entity.TUserMajorCourseExam">
+        <include refid="selectSql1"></include>
+    </select>
+
+    <select id="selectListRelNotExam" resultType="com.struggle.common.exam.entity.TUserMajorCourseExam">
+        <include refid="selectSql1"></include>
+    </select>
+
+</mapper>

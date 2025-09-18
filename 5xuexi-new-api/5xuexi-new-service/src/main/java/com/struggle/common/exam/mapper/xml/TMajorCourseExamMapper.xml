@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.exam.mapper.TMajorCourseExamMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.*, b.major_year
+        FROM t_major_course a left join  t_major b on  a.major_id = b.major_id and b.deleted=0
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.majorYear != null">
+                AND b.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((a.semester = ((#{param.academicYear} - b.major_year)*2+1)  or a.semester = ((#{param.academicYear} - b.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND a.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND a.semester = #{param.semester}
+            </if>
+            <if test="param.majorId != null">
+                AND a.major_id = #{param.majorId}
+            </if>
+            <if test="param.courseId != null">
+                AND a.course_id = #{param.courseId}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.paperStatus != null and param.paperStatus==2">
+                AND a.id in(select major_course_id from t_major_course_exam where deleted=0 and NOW() >= start_time  and end_time >=  NOW() )
+            </if>
+            <if test="param.paperStatus != null and param.paperStatus==1">
+                AND a.id in(select major_course_id from t_major_course_exam where deleted=0)
+            </if>
+            <if test="param.paperStatus != null and param.paperStatus==0">
+                AND a.id not in(select major_course_id from t_major_course_exam where deleted=0)
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.base.entity.MajorCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.base.entity.MajorCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(x.major_course_exam_id) from t_major_course_exam x
+        where x.deleted =0 and x.major_course_id = #{param.majorCourseId}
+             and not (x.start_time > #{param.endTime} or #{param.startTime} > x.end_time )
+            <if test="param.majorCourseExamId != null">
+                AND x.major_course_exam_id != #{param.majorCourseExamId}
+            </if>
+    </select>
+</mapper>

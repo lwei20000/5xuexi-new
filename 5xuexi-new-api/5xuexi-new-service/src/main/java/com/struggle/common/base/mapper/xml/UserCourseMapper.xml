@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.struggle.common.base.mapper.UserCourseMapper">
+
+
+    <!-- 关联查询sql -->
+    <sql id="selectSql">
+        SELECT a.*,
+               c.semester,
+               b.org_id,
+               b.user_number,
+               m.major_year
+        FROM t_user_course a
+        join t_user_major b on a.user_id=b.user_id and a.major_id= b.major_id and b.deleted=0
+        join t_major m on m.major_id = a.major_id and m.deleted=0
+        join t_major_course c on c.major_id = a.major_id and c.course_id = a.course_id and c.deleted=0
+        <where>
+            <if test="param.id != null">
+                AND a.id = #{param.id}
+            </if>
+            <if test="param.userId != null">
+                AND a.user_id = #{param.userId}
+            </if>
+            <if test="param.majorId != null">
+                AND a.major_id = #{param.majorId}
+            </if>
+            <if test="param.majorYear != null">
+                AND m.major_year =  #{param.majorYear}
+            </if>
+            <if test="param.academicYear != null">
+                AND ((c.semester = ((#{param.academicYear} - m.major_year)*2+1)  or c.semester = ((#{param.academicYear} - m.major_year)*2)+2))
+            </if>
+            <if test="param.academicSemester != null">
+                AND c.semester%2 = #{param.academicSemester}
+            </if>
+            <if test="param.semester != null">
+                AND c.semester = #{param.semester}
+            </if>
+            <if test="param.courseId != null">
+                AND a.course_id = #{param.courseId}
+            </if>
+            <if test="param.deleted != null">
+                AND a.deleted = #{param.deleted}
+            </if>
+            <if test="param.deleted == null">
+                AND a.deleted = 0
+            </if>
+            <if test="param.orgId != null">
+                AND b.org_id = #{param.orgId}
+            </if>
+            <!--租户内部数据权限 -->
+            <if test="param.orgIds != null and param.orgIds.size()>0">
+                AND b.org_id in
+                <foreach collection="param.orgIds" open="(" close=")" separator="," item="orgId">
+                    #{orgId}
+                </foreach>
+            </if>
+            <if test="param.createTimeStart != null">
+                AND a.create_time &gt;= #{param.createTimeStart}
+            </if>
+            <if test="param.createTimeEnd != null">
+                AND a.create_time &lt;= #{param.createTimeEnd}
+            </if>
+            <if test="param.majorIds != null and param.majorIds.size()>0">
+                AND a.major_id in
+                <foreach collection="param.majorIds" open="(" close=")" separator="," item="majorId">
+                    #{majorId}
+                </foreach>
+            </if>
+            <if test="param.userMajorIds != null and param.userMajorIds.size()>0">
+                AND b.id in
+                <foreach collection="param.userMajorIds" open="(" close=")" separator="," item="userMajorId">
+                    #{userMajorId}
+                </foreach>
+            </if>
+            <!--根据userIds查询用户ids -->
+            <if test="param.userIds != null and param.userIds.size()>0">
+                AND a.user_id in
+                <foreach collection="param.userIds" open="(" close=")" separator="," item="userId">
+                    #{userId}
+                </foreach>
+            </if>
+            <if test="param.courseIds != null and param.courseIds.size()>0">
+                AND a.course_id in
+                <foreach collection="param.courseIds" open="(" close=")" separator="," item="courseId">
+                    #{courseId}
+                </foreach>
+            </if>
+            <if test="param.majorYears != null and param.majorYears.size()>0">
+                AND m.major_year in
+                <foreach collection="param.majorYears" open="(" close=")" separator="," item="majorYear">
+                    #{majorYear}
+                </foreach>
+            </if>
+            <if test="param.totalScore != null">
+                AND (a.total_score is null or  #{param.totalScore} > a.total_score)
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="selectPageRel" resultType="com.struggle.common.base.entity.UserCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectListRel" resultType="com.struggle.common.base.entity.UserCourse">
+        <include refid="selectSql"></include>
+    </select>
+
+</mapper>
