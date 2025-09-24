@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling
 @Indexed
 public class StruggleBackendApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(StruggleBackendApplication.class, args);
     }
