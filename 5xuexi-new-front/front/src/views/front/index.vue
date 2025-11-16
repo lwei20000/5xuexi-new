@@ -275,6 +275,7 @@ export default {
           '    </table>' +
           '    <table class="ele-printer-table" style="width:85%;margin: 0 auto;margin-top: 10px;text-align: center;">';
 
+        // 7:changda
         if (tenantId === 7) {
           pageHtml += '      <tr  style="width: 100%;font-size: 12px;">\n' +
             '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">学年</th>\n' +
@@ -301,16 +302,23 @@ export default {
         }
         var _map = courseScoreMap[user.userId + "_" + userMajor.majorId];
 
+        // 7:changda
         if (tenantId === 7) {
+          // len：有几个学年
           var len = Math.floor(userMajor?.major.majorLength || 0) + 1;
           var totalRow = 0;
+
           for (var m = 1; m < len; m++) {
+
+            // rowspan：计算得到每个学年的行高
             var list1 = _map[m * 2 - 1] || [];
             var list2 = _map[m * 2] || [];
             var rowspan = list1.length;
             if (rowspan < list2.length) {
               rowspan = list2.length;
             }
+
+
             if (rowspan > 0) {
               for (var t = 0; t < rowspan; t++) {
                 totalRow++;
@@ -329,6 +337,7 @@ export default {
 
                 } else {
                   pageHtml += '      <tr  style="width: 100%;font-weight: 400;font-size: 12px;">\n' +
+
                     '        <td style="padding: 0 5px">' + (list1[t]?.course?.courseName || '') + '</td>\n' +
                     '        <td>' + (list1[t]?.totalScore || (list1[t]?.course?.courseName ? 0 : '')) + '</td>\n' +
                     '        <td></td>\n' +
