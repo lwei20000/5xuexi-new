@@ -39,6 +39,17 @@
           >
             导入
           </el-button>
+          <!-- 在导入按钮后面添加批量状态切换按钮 -->
+          <el-button v-permission="'sys:user:update:f13dbabbd410476193f385a39234da83'"
+                     size="small"
+                     icon="el-icon-refresh"
+                     class="ele-btn-icon"
+                     :disabled="!selection.length"
+                     @click="batchChangeStatus"
+          >
+            批量状态切换
+          </el-button>
+
         </template>
         <!-- 昵称列 -->
         <template v-slot:realname="{ row }">
@@ -365,6 +376,44 @@
             row.status = !row.status ? 1 : 0;
             this.$message.error(e.message);
           });
+      },
+      /* 批量更改状态 */
+      batchChangeStatus() {
+        if (!this.selection.length) {
+          this.$message.error('请至少选择一条数据');
+          return;
+        }
+
+        // 检查是否有系统默认用户被选中
+        const systemDefaultUsers = this.selection.filter(item => item.systemDefault !== 0);
+        if (systemDefaultUsers.length > 0) {
+          this.$message.error('不能操作系统默认用户');
+          return;
+        }
+
+        // 计算目标状态（取反第一个选中用户的当前状态）
+        const targetStatus = this.selection[0].status === 0 ? 1 : 0;
+        const statusText = targetStatus === 0 ? '启用' : '禁用';
+
+        this.$confirm(`确定要${statusText}选中的 ${this.selection.length} 个用户吗?`, '提示', {
+          type: 'warning',
+          lockScroll: false
+        }).then(() => {
+          const loading = this.$loading({ lock: true });
+          const userIds = this.selection.map(item => item.userId);
+
+          // 批量更新状态的API调用
+          Promise.all(userIds.map(userId => updateUserStatus(userId, targetStatus)))
+            .then(() => {
+              loading.close();
+              this.$message.success(`${statusText}成功`);
+              this.reload();
+            })
+            .catch((e) => {
+              loading.close();
+              this.$message.error(e.message);
+            });
+        }).catch(() => {});
       }
     },
     watch: {
@@ -382,4 +431,6 @@
       }
     }
   };
+
+
 </script>
