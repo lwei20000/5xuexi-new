@@ -519,7 +519,7 @@ export default {
                 pageHtml += '  <tr  style="width: 100%;font-weight: 400;font-size: 12px;">\n' +
                   '        <td>' + this.numArr[m] + '<br>学<br>年</td>\n' +
                   '        <td>' + this.numArr[m * 2 - 1] + '</td>\n' +
-                  '        <td></td>\n' +
+                   '        <td></td>\n' +
                   '        <td></td>\n' +
                   '        <td></td>\n' +
                   '        <td>' + this.numArr[m * 2] + '</td>\n' +
@@ -527,6 +527,43 @@ export default {
                   '        <td></td>\n' +
                   '        <td></td>\n' +
                   '      </tr>\n';
+              }
+
+              // 第四学年末尾断开表格，新开一页
+              if(m == 4) {
+                // 正确的分页符插入方式：结束当前表格，插入分页符，然后重新开始新的表格容器
+                if (type == 1) {
+                  // changda类型表格列宽度设置
+                  pageHtml += '</table></div>' +
+                    '<div style="page-break-after: always;"></div>' +
+                    '<div><table class="ele-printer-table" style="width:85%;margin: 0 auto;margin-top: 40px;text-align: center;">' +
+                    '<tr style="width: 100%;font-size: 12px;">\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">学年</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">学期</th>\n' +
+                    '        <th style="width: 22%;font-weight: 400;padding: 2px 10px">课程</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">考试成绩</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">补考成绩</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">学期</th>\n' +
+                    '        <th style="width: 22%;font-weight: 400;padding: 2px 10px">课程</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">考试成绩</th>\n' +
+                    '        <th style="width: 8%;font-weight: 400;padding: 2px 10px">补考成绩</th>\n' +
+                    '      </tr>';
+                } else {
+                  // others类型表格列宽度设置
+                  pageHtml += '</table></div>' +
+                    '<div style="page-break-after: always;"></div>' +
+                    '<div><table class="ele-printer-table" style="width:85%;margin: 0 auto;margin-top: 10px;text-align: center;">' +
+                    '<tr style="width: 100%;font-size: 12px;">\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">学年</th>\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">学期</th>\n' +
+                    '        <th style="width: 23%;font-weight: 400;padding: 5px">课程</th>\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">成绩</th>\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">学年</th>\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">学期</th>\n' +
+                    '        <th style="width: 23%;font-weight: 400;padding: 5px">课程</th>\n' +
+                    '        <th style="width: 9%;font-weight: 400;padding: 5px">成绩</th>\n' +
+                    '      </tr>';
+                }
               }
             }
 
